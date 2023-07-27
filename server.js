@@ -1,4 +1,5 @@
 const express = require('express');
+const cors = require('cors');
 const bodyParser = require('body-parser');
 const { resourcesRouter } = require('./Routes/resoursesRoutes');
 
@@ -7,10 +8,11 @@ const app = express();
 // Settings
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(express.json());
-app.use('api/resources', resourcesRouter);
+app.use(cors())
+app.use('/api/resource', resourcesRouter);
 
 app.use((err, req, res, next) => {
-    res.status(500).send('Something broke!');
+    res.json({error: err.message});
 });
 // Starting the server
 app.listen(8002, () => {
