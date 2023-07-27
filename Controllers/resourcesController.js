@@ -41,8 +41,27 @@ const getResourceTypes = async (req, res) => {
     }
 };
 
+const getResourceTypeById = async (req, res) => {
+    try {
+        const {id} = req.params;
+        const pool = await (mssql.connect(sqlConfig));
+        const result = await (pool.request()
+            .input('id', mssql.Int, id)
+            .execute('getResourceTypeByIdProcedure'));
+        res.json({
+            message: 'Resource Type retrieved successfully',
+            body: result.recordset,
+            status: 200
+        })
+    } catch (error) {
+        res.status(500).send(error.message);
+    }
+};
+
+
 
 module.exports = {
     createResourceType,
-    getResourceTypes
+    getResourceTypes,
+    getResourceTypeById
 };
