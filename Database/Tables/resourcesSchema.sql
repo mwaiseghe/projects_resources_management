@@ -19,15 +19,21 @@ END CATCH
 
 DROP TABLE IF EXISTS resources;
 
-CREATE TABLE resources(
-    id VARCHAR(200) PRIMARY KEY,
-    resource_type_id INT NOT NULL,
-    resource_name VARCHAR(255) NOT NULL,
-    resource_description VARCHAR(255) NOT NULL,
-    resource_cost FLOAT NOT NULL,
-    is_available BIT NOT NULL,
-    FOREIGN KEY (resource_type_id) REFERENCES resources_types(id)
-);
+BEGIN TRY
+    CREATE TABLE resources(
+        id VARCHAR(200) PRIMARY KEY,
+        resource_type_id INT NOT NULL,
+        resource_name VARCHAR(255) NOT NULL,
+        resource_description VARCHAR(255) NOT NULL,
+        resource_cost FLOAT NOT NULL,
+        is_available BIT NOT NULL DEFAULT 1,
+        FOREIGN KEY (resource_type_id) REFERENCES resources_types(id)
+    );
+END TRY
+BEGIN CATCH
+    PRINT 'Table resources already exists';
+END CATCH
+
 
 DROP TABLE IF EXISTS projects;
 

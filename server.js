@@ -12,7 +12,7 @@ app.use(cors())
 app.use('/api/resource', resourcesRouter);
 
 app.use((err, req, res, next) => {
-    res.json({error: err.message});
+    console.log(err);
 });
 // Starting the server
 app.listen(8002, () => {

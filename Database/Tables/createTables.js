@@ -1,4 +1,4 @@
-const {poolPromise, mssql} = require('../Config/Config');
+const { sqlConfig, mssql } = require("../../Config/Config");
 
 
 const createResourceType = async (req, res) => {
@@ -16,7 +16,7 @@ const createResourceType = async (req, res) => {
                 PRINT 'Table resources_types already exists';
             END CATCH
         `;
-        const pool = await poolPromise;
+        const pool = await mssql.connect(sqlConfig);
         const result = await pool.request().query(table, (err, res) => {
             if (err) {
                 console.log(err);
@@ -31,6 +31,40 @@ const createResourceType = async (req, res) => {
     }
 };
 
+const createResourceTable = async (req, res) => {
+    try {
+        const table = `
+            BEGIN TRY
+                CREATE TABLE resources(
+                    id VARCHAR(200) PRIMARY KEY,
+                    resource_type_id INT NOT NULL,
+                    resource_name VARCHAR(255) NOT NULL,
+                    resource_description VARCHAR(255) NOT NULL,
+                    resource_cost FLOAT NOT NULL,
+                    is_available BIT NOT NULL DEFAULT 1,
+                    FOREIGN KEY (resource_type_id) REFERENCES resources_types(id)
+                );
+            END TRY
+            BEGIN CATCH
+                PRINT 'Table resources already exists';
+            END CATCH
+            `;
+        const pool = await mssql.connect(sqlConfig);
+        const result = await pool.request().query(table, (err, res) => {
+            if (err) {
+                console.log(err);
+            }
+            console.log(res);
+        }
+
+        );
+        res.status(200).json({message: 'Table resources created successfully'});
+    } catch (error) {
+        console.log(error);
+    }
+};
+
 module.exports = {
-    createResourceType
+    createResourceType,
+    createResourceTable,
 };

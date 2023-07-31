@@ -44,6 +44,13 @@ BEGIN CATCH
 END CATCH;
 GO
 
-EXEC sp_addResource '1', 1, 'Concrete', 'Concrete is a composite material composed of fine and coarse aggregate bonded together with a fluid cement (cement paste) that hardens (cures) over time.', 100, 1;
 
-SELECT * FROM resources;
+CREATE OR ALTER PROCEDURE sp_getResources
+AS
+BEGIN TRY 
+    SELECT * FROM dbo.resources;
+END TRY
+BEGIN CATCH
+    THROW;
+END CATCH;
+GO
